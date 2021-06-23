@@ -8,6 +8,7 @@ import {
 import {
   createAutocompleteField,
   createBooleanField,
+  createDateField,
   createOptionsField,
   createPriceField
 } from "@saleor/utils/filters/fields";
@@ -69,15 +70,28 @@ const messages = defineMessages({
   }
 });
 
+const extractAttributes = (opts: ProductListFilterOpts) => (
+  type: AttributeInputTypeEnum
+) => opts.attributes.filter(({ inputType }) => inputType === type);
+
 export function createFilterStructure(
   intl: IntlShape,
   opts: ProductListFilterOpts
 ): IFilter<string> {
-  const booleanAttributes = opts.attributes.filter(
-    ({ inputType }) => inputType === AttributeInputTypeEnum.BOOLEAN
-  );
+  const getAttributes = extractAttributes(opts);
+
+  const booleanAttributes = getAttributes(AttributeInputTypeEnum.BOOLEAN);
+  const numericAttributes = getAttributes(AttributeInputTypeEnum.NUMERIC);
+  const dateAttributes = getAttributes(AttributeInputTypeEnum.DATE);
+  const dateTimeAttributes = getAttributes(AttributeInputTypeEnum.DATE_TIME);
   const defaultAttributes = opts.attributes.filter(
-    ({ inputType }) => !inputType.includes(AttributeInputTypeEnum.BOOLEAN)
+    ({ inputType }) =>
+      ![
+        AttributeInputTypeEnum.BOOLEAN,
+        AttributeInputTypeEnum.DATE,
+        AttributeInputTypeEnum.DATE_TIME,
+        AttributeInputTypeEnum.NUMERIC
+      ].includes(inputType)
   );
 
   return [
@@ -177,9 +191,19 @@ export function createFilterStructure(
       active: attr.active,
       group: ProductFilterKeys.attributes
     })),
+    ...dateAttributes.map(attr => ({
+      ...createDateField(attr.slug, attr.name, { min: null, max: null }),
+      active: attr.active,
+      group: ProductFilterKeys.attributes
+    })),
+    ...dateTimeAttributes.map(attr => ({
+      ...createDateField(attr.slug, attr.name, { min: null, max: null }),
+      active: attr.active,
+      group: ProductFilterKeys.attributes
+    })),
     ...defaultAttributes.map(attr => ({
       ...createAutocompleteField(
-        attr.slug as any,
+        attr.slug,
         attr.name,
         attr.value,
         opts.attributeChoices.displayValues,

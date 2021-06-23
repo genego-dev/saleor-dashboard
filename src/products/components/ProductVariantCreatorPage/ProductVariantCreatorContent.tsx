@@ -10,7 +10,7 @@ import React from "react";
 import { ProductVariantCreateFormData } from "./form";
 import ProductVariantCreatePriceAndSku from "./ProductVariantCreatorPriceAndSku";
 import ProductVariantCreateSummary from "./ProductVariantCreatorSummary";
-import ProductVariantCreateValues from "./ProductVariantCreatorValues";
+import ProductVariantCreatorValues from "./ProductVariantCreatorValues";
 import {
   ProductVariantCreateReducerAction,
   ProductVariantCreateReducerActionType
@@ -55,7 +55,7 @@ const ProductVariantCreatorContent: React.FC<ProductVariantCreatorContentProps> 
   return (
     <>
       {step === ProductVariantCreatorStep.values && (
-        <ProductVariantCreateValues
+        <ProductVariantCreatorValues
           attributes={selectedAttributes}
           attributeValues={attributeValues}
           fetchAttributeValues={fetchAttributeValues}

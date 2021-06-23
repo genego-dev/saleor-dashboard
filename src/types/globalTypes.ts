@@ -1178,7 +1178,8 @@ export interface AttributeValueTranslationInput {
 
 export interface BulkAttributeValueInput {
   id?: string | null;
-  values: (string | null)[];
+  values?: (string | null)[] | null;
+  boolean?: boolean | null;
 }
 
 export interface CatalogueInput {

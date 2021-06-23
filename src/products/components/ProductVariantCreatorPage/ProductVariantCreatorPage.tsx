@@ -195,6 +195,8 @@ const ProductVariantCreatePage: React.FC<ProductVariantCreatePageProps> = props 
     ? limits.allowedUsage.productVariants - limits.currentUsage.productVariants
     : null;
 
+  console.log({ wizardData });
+
   return (
     <Container>
       <ProductVariantCreateTabs step={step} onStepClick={setStep} />
